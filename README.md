@@ -32,7 +32,7 @@ fun navigate(context: Context, navigation: BoatNavigationEffect) {
 # Concept
 Boat is build on top of a simple concept: *It's all about effects composition*. Boat provides some effects that are built on top of its compositions, all effects must respect some laws:
 
-- All identities are immutable and composition doesn't break this.
+- All identities are immutable and composition doesn't break it.
 - Every composition create a new effect with correct configuration.
 - During the composition none of composed effects are affected.
 
@@ -46,7 +46,7 @@ As seeing before, effects are totally composables and Boat provides some of them
 val appNavigation: BoatNavigationEffect = Boat {
   compose("/first") { FirstActivity::class }
   compose("/second") { SecondActivity::class }
-}
+}.effect()
 
 fun main(context: Context) {
   appNavigation.navigate(context, "/second") // Navigating to SecondActivity
@@ -59,7 +59,7 @@ Since we work with effects composition with all immutable and scoped laws preser
 val appNavigation: BoatNavigationEffect = Boat {
   compose("/first") { FirstActivity::class }
   compose("/second") { SecondActivity::class }
-}
+}.effect()
 
 fun main() {
   myExternalModule(appNavigation)
@@ -70,7 +70,7 @@ fun main() {
 private val myModuleNavigation: BoatNavigationEffect = Boat {
   compose("/my_module_1") { MyModuleFirstActivity::class }
   compose("/my_module_2") { MyModuleSecondActivity::class }
-}
+}.effect()
 
 fun myExternalModule(navigation: BoatNavigationEffect) {
   registerInMyDI(navigation + myModuleNavigation)
@@ -81,7 +81,37 @@ fun registerInMyDI(navigation: BoatNavigationEffect) {
 }
 ```
 
-To compose effects in Boat we use `+` operator, in this example we just created an internal navigation effect for a external module and composed with an injected navigation effect, by that my external module can navigate to `/my_module_1`, `/my_module_2`, `/first` and `/second` routes with no impact to `appNavigation` that never knows about `/my_module_1` and `/my_module_2` routes
+To compose effects in Boat we use `+` operator, in this example we just created an internal navigation effect for a external module and composed with an injected navigation effect, by that my external module can navigate to `/my_module_1`, `/my_module_2`, `/first` and `/second` routes with no impact to `appNavigation` that never knows about `/my_module_1` and `/my_module_2` routes.
 
-### Predictable effecs
-Effect that validates predicates during the composition, Boat provides an implementation of a predictable effect called `RouteContract`. This effect validates during the composition if `N` routes are composed in 
+### Route contract effect
+`BoatRouteContractEffect` validates if `N` routes are composed in boat navigation identity during the composition:
+
+```kotlin
+val navigation: BoatNavigationEffect = Boat {
+  compose("/first") { FirstActivity::class }
+  compose("/second") { SecondActivity::class }
+}.effect()
+
+val appRouteContracts: BoatRouteContractEffect = RouteContract {
+  compose("/first")
+  compose("/second")
+  compose("/third")
+  compose("/fourth")
+}.effect { "Routes $this should be composed in navigation" }
+
+val appNavigation = navigation + appRouteContracts // java.lang.IllegalArgumentException: Routes /third, /fourth should be composed in navigation
+```
+
+In this example we've created a navigation with two routes and a contract with 4 routes, by creating this contract effect what we want is to make sure that composed navigation effect identity compose all these routes that we've declared in contract. In this case we receive a throw of a exception with our custom message saying that composed navigation effect doesn't satisfies our contract. Once we compose the other two missing routes, we're good:
+
+```kotlin
+val navigation: BoatNavigationEffect = Boat {
+  ...
+  compose("/third") { FirstActivity::class }
+  compose("/fourth") { SecondActivity::class }
+}.effect()
+
+...
+
+val appNavigation = navigation + appRouteContracts // OK!
+```
