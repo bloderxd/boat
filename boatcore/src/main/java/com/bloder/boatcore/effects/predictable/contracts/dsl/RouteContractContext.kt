@@ -6,11 +6,12 @@ interface RouteContractContext {
 
     fun compose(id: String): BoatRouteContract
 
-    companion object : RouteContractContext {
-        private val mutableList: MutableList<String> = mutableListOf()
+    class Config : RouteContractContext {
+        private val routes: MutableList<String> = mutableListOf()
 
         override fun compose(id: String): BoatRouteContract {
-            return mutableList
+            routes.add(id)
+            return routes
         }
     }
 }

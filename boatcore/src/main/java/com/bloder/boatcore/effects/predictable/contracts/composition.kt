@@ -5,7 +5,7 @@ import com.bloder.boatcore.effects.predictable.BoatPredictableEffect
 import com.bloder.boatcore.routes.BoatRoutes
 
 fun BoatNavigationEffect.composeWith(contractEffect: BoatPredictableEffect<BoatRoutes, String>): BoatNavigationEffect {
-    val pred = contractEffect.predicate(identity()) { "" }
+    val pred = contractEffect.predicate(identity())
     require(pred.isRight()) { pred.fold({ it }, { "" }) }
     return this
 }

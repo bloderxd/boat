@@ -10,7 +10,7 @@ interface BoatContext {
     fun compose(id: String, route: () -> KClass<out Activity>): BoatRoutes
     fun compose(id: String, route: Route): BoatRoutes
 
-    companion object : BoatContext {
+    class Config : BoatContext {
 
         private val boatRoutes: MutableMap<String, Route> = mutableMapOf()
 

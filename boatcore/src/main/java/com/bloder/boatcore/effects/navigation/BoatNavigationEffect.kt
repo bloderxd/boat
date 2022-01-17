@@ -22,5 +22,12 @@ interface BoatNavigationEffect : Monoid<BoatRoutes> {
         data: Map<String, Parcelable>? = null,
         additionalFlags: Int? = null,
         options: Bundle? = null
-    )
+    ) {
+        identity()[route]?.navigate(
+            context = context,
+            data = data,
+            additionalFlags = additionalFlags,
+            options = options
+        )
+    }
 }

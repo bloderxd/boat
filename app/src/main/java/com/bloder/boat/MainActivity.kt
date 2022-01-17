@@ -13,23 +13,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.bloder.boat.ui.theme.BoatTheme
 import com.bloder.boatcore.Boat
 import com.bloder.boatcore.effects.navigation.BoatNavigationEffect
-import com.bloder.boatcore.effects.navigation.asEffect
+import com.bloder.boatcore.effects.navigation.effect
 import com.bloder.boatcore.effects.navigation.plus
-import com.bloder.boatcore.effects.predictable.contracts.asContractEffect
+import com.bloder.boatcore.effects.predictable.contracts.contractEffect
 import com.bloder.boatcore.effects.predictable.contracts.dsl.RouteContract
 
 val navigation: BoatNavigationEffect = Boat {
     compose("A") { ActivityA::class }
     compose("B") { ActivityB::class }
-}.asEffect()
+}.effect()
 
 val navigation2: BoatNavigationEffect = Boat {
     compose("A") { ActivityA::class }
-}.asEffect()
+}.effect()
 
 val routeContract = RouteContract {
     compose("A")
-}.asContractEffect()
+}.contractEffect { "" }
 
 val appNavigation = navigation + routeContract + navigation2
 
