@@ -15,7 +15,7 @@ import com.bloder.boatcore.Boat
 import com.bloder.boatcore.effects.navigation.BoatNavigationEffect
 import com.bloder.boatcore.effects.navigation.effect
 import com.bloder.boatcore.effects.navigation.plus
-import com.bloder.boatcore.effects.predictable.contracts.contractEffect
+import com.bloder.boatcore.effects.predictable.contracts.effect
 import com.bloder.boatcore.effects.predictable.contracts.dsl.RouteContract
 
 val navigation: BoatNavigationEffect = Boat {
@@ -29,7 +29,7 @@ val navigation2: BoatNavigationEffect = Boat {
 
 val routeContract = RouteContract {
     compose("A")
-}.contractEffect { "" }
+}.effect { "" }
 
 val appNavigation = navigation + routeContract + navigation2
 
