@@ -26,3 +26,10 @@ fun navigate(context: Context, navigation: BoatNavigationEffect) {
   navigation.navigate(context, "/third") // Navigating to ThirdActivity
 }
 ```
+
+# Concept
+Boat is build on top of a simple concept: *It's all about effects composition*. Boat provides some effects that are built on top of its compositions, all effects must respect some laws:
+
+- All identities are immutable and composition doesn't break this.
+- Every composition create a new effect with correct configuration.
+- During the composition none of composed effects are affected. 
