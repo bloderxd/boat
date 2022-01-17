@@ -141,9 +141,50 @@ In this example we've created a middleware that prints before and after navigati
 ```kotlin
 appNavigation.navigate(context, "/first")
 
-> Navigating to route /first...
+> "Navigating to route /first..."
+
  *Navigation occurs*
-> Navigated to route /first
+ 
+> "Navigated to route /first"
 ```
 
 `navigate()` function is just a representation of the navigation continuation that means we can't modify navigation parameters.
+
+We can also compose more middlewares
+
+```kotlin
+val navigation: BoatNavigationEffect = Boat {
+  compose("/first") { FirstActivity::class }
+  compose("/second") { SecondActivity::class }
+}.effect()
+
+val printMiddleware: BoatMiddlewareEffect = boatMiddleware { route, _, _, _, navigate ->
+  println("Navigating to route $route...")
+  navigate()
+  println("Navigated to route $route")
+}
+
+val Tracker.middleware: BoatMiddlewareEffect get() = boatMiddleware { route, _, _, _, navigate ->
+  track(route)
+  navigate()
+}
+
+fun main(context: Context, tracker: Tracker) {
+  val appNavigation: BoatNavigationEffect = navigation + printMiddleware + tracker.middleware
+}
+```
+
+Composed middlewares means that we have closures with effects, then in this case we have this behavior:
+
+```kotlin
+...
+val appNavigation: BoatNavigationEffect = navigation + printMiddleware + tracker.middleware
+appNavigation.navigate(context, "/first")
+
+> "Navigating to route /first..."
+> Tracking "/first"
+
+ *Navigation occurs*
+ 
+> "Navigated to route /first" 
+```
