@@ -187,3 +187,9 @@ appNavigation.navigate(context, "/first")
  
 > "Navigated to route /first" 
 ```
+
+# Enhancement
+Next studies and improvements:
+
+- Usage of `suspend` functions in all effects to handle its Unit complexities
+- Integration with Compose `NavHost` API
