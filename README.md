@@ -177,7 +177,6 @@ fun main(context: Context, tracker: Tracker) {
 Composed middlewares means that we have closures with effects, then in this case we have this behavior:
 
 ```kotlin
-...
 val appNavigation: BoatNavigationEffect = navigation + printMiddleware + tracker.middleware
 appNavigation.navigate(context, "/first")
 
