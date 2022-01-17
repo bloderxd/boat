@@ -99,7 +99,7 @@ val appRouteContracts: BoatRouteContractEffect = RouteContract {
   compose("/fourth")
 }.effect { "Routes $this should be composed in navigation" }
 
-val appNavigation = navigation + appRouteContracts // java.lang.IllegalArgumentException: Routes /third, /fourth should be composed in navigation
+val appNavigation: BoatNavigationEffect = navigation + appRouteContracts // java.lang.IllegalArgumentException: Routes /third, /fourth should be composed in navigation
 ```
 
 In this example we've created a navigation with two routes and a contract with 4 routes, by creating this contract effect what we want is to make sure that composed navigation effect identity compose all these routes that we've declared in contract. In this case we receive a throw of a exception with our custom message saying that composed navigation effect doesn't satisfies our contract. Once we compose the other two missing routes, we're good:
@@ -113,5 +113,37 @@ val navigation: BoatNavigationEffect = Boat {
 
 ...
 
-val appNavigation = navigation + appRouteContracts // OK!
+val appNavigation: BoatNavigationEffect = navigation + appRouteContracts // OK!
 ```
+
+This is useful when we have for example multiple modules and in its navigation injection we want to establish a contract saying that my module need `N` routes to be composed in the injected navigation effect.
+
+### Middleware effect
+`BoatMiddlewareEffect` provides a way to intercept and write extra custom effects over a navigation. As example let's create a solution that prints `"Navigating to route X..."` before and `Navigated to route X` after the navigation every time we navigate to a route:
+
+```kotlin
+val navigation: BoatNavigationEffect = Boat {
+  compose("/first") { FirstActivity::class }
+  compose("/second") { SecondActivity::class }
+}.effect()
+
+val printMiddleware: BoatMiddlewareEffect = boatMiddleware { route, _, _, _, navigate ->
+  println("Navigating to route $route...")
+  navigate()
+  println("Navigated to route $route")
+}
+
+val appNavigation: BoatNavigationEffect = navigation + printMiddleware
+```
+
+In this example we've created a middleware that prints before and after navigation, `navigate()` function represents the moment that effect navigates. It's triggered when we call `navigate()` function from the `BoatNavigationEffect`:
+
+```kotlin
+appNavigation.navigate(context, "/first")
+
+> Navigating to route /first...
+ *Navigation occurs*
+> Navigated to route /first
+```
+
+`navigate()` function is just a representation of the navigation continuation that means we can't modify navigation parameters.
