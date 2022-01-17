@@ -193,3 +193,4 @@ Next studies and improvements:
 
 - Usage of `suspend` functions in all effects to handle its Unit complexities
 - Integration with Compose `NavHost` API
+- Use `FIR` to validate `BoatRouteContractEffect` in compile time
