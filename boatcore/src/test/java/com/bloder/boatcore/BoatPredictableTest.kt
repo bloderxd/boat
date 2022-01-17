@@ -3,8 +3,8 @@ package com.bloder.boatcore
 import android.app.Activity
 import com.bloder.boatcore.effects.navigation.BoatNavigationEffect
 import com.bloder.boatcore.effects.navigation.effect
-import com.bloder.boatcore.effects.navigation.plus
-import com.bloder.boatcore.effects.predictable.contracts.plus
+import com.bloder.boatcore.effects.plus
+import com.bloder.boatcore.effects.predictable.contracts.RouteContractEffect
 import com.bloder.boatcore.effects.predictable.contracts.effect
 import com.bloder.boatcore.effects.predictable.contracts.dsl.RouteContract
 import org.junit.Test
@@ -14,7 +14,7 @@ class BoatPredictableTest {
     @Test
     fun `assert N routes are in boat identity`() {
         val boat: BoatNavigationEffect = Boat { compose("A") { Activity::class } }.effect()
-        val contract = RouteContract { compose("A") }.effect { "Route $this should be compose in boat" }
+        val contract: RouteContractEffect = RouteContract { compose("A") }.effect { "Route $this should be compose in boat" }
         val boat2 = boat + contract
         assert(boat2.identity().containsKey("A"))
     }
@@ -22,7 +22,7 @@ class BoatPredictableTest {
     @Test
     fun `assert contract is not satisfiable`() {
         val boat: BoatNavigationEffect = Boat { compose("B") { Activity::class } }.effect()
-        val contract = RouteContract { compose("A") }.effect { "Route $this should be composed in boat" }
+        val contract: RouteContractEffect = RouteContract { compose("A") }.effect { "Route $this should be composed in boat" }
         try {
             boat + contract
         } catch (e: Throwable) {
@@ -35,7 +35,7 @@ class BoatPredictableTest {
         val boat: BoatNavigationEffect = Boat { compose("A") { Activity::class } }.effect()
         val boat2: BoatNavigationEffect = Boat { compose("B") { Activity::class } }.effect()
         val boat3: BoatNavigationEffect = Boat { compose("C") { Activity::class } }.effect()
-        val contract = RouteContract {
+        val contract: RouteContractEffect = RouteContract {
             compose("A")
             compose("B")
             compose("C")
@@ -56,7 +56,7 @@ class BoatPredictableTest {
         val boat3: BoatNavigationEffect = Boat { compose("C") { Activity::class } }.effect()
         val boat4: BoatNavigationEffect = Boat { compose("D") { Activity::class } }.effect()
         val boat5: BoatNavigationEffect = Boat { compose("E") { Activity::class } }.effect()
-        val contract = RouteContract {
+        val contract: RouteContractEffect = RouteContract {
             compose("A")
             compose("B")
             compose("C")

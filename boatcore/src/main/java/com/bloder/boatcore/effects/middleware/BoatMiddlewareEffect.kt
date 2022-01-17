@@ -9,6 +9,10 @@ interface BoatMiddlewareEffect : BoatNavigationEffect {
 
     fun middle(route: String, data: Map<String, Parcelable>?, additionalFlags: Int?, options: Bundle?, navigate: () -> Unit)
 
+    fun navigateIdentity(context: Context, route: String, data: Map<String, Parcelable>?, additionalFlags: Int?, options: Bundle?) {
+        super.navigate(context, route, data, additionalFlags, options)
+    }
+
     override fun navigate(
         context: Context,
         route: String,
@@ -16,6 +20,6 @@ interface BoatMiddlewareEffect : BoatNavigationEffect {
         additionalFlags: Int?,
         options: Bundle?
     ) {
-        middle(route, data, additionalFlags, options) { super.navigate(context, route, data, additionalFlags, options) }
+        middle(route, data, additionalFlags, options) { navigateIdentity(context, route, data, additionalFlags, options) }
     }
 }

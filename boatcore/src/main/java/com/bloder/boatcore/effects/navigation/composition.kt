@@ -15,5 +15,3 @@ fun BoatNavigationEffect.composeWith(navigationEffect: BoatNavigationEffect): Bo
     override fun identity(): BoatRoutes = this@composeWith.identity().combine(navigationEffect.identity())
     override fun navigate(context: Context, route: String, data: Map<String, Parcelable>?, additionalFlags: Int?, options: Bundle?) = navigationEffect.navigate(context, route, data, additionalFlags, options)
 }
-
-infix operator fun BoatNavigationEffect.plus(navigationEffect: BoatNavigationEffect) = composeWith(navigationEffect)

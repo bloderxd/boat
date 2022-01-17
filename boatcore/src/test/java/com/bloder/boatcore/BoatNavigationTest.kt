@@ -4,7 +4,7 @@ import android.app.Activity
 import com.bloder.boatcore.dsl.BoatContext
 import com.bloder.boatcore.effects.navigation.BoatNavigationEffect
 import com.bloder.boatcore.effects.navigation.effect
-import com.bloder.boatcore.effects.navigation.plus
+import com.bloder.boatcore.effects.plus
 import com.bloder.boatcore.routes.BoatRoutes
 import org.junit.Test
 

@@ -19,3 +19,11 @@ fun Boat.testEffect(navigate: (String, Map<String, Parcelable>?, additionalFlags
     }
     override fun identity(): BoatRoutes = BoatContext.Config().config()
 }
+
+fun BoatTestEffect.composeWith(boatTestEffect: BoatTestEffect): BoatTestEffect = object : BoatTestEffect {
+    override fun mockNavigate(context: Context, route: String, data: Map<String, Parcelable>?, additionalFlags: Int?, options: Bundle?) {
+        boatTestEffect.mockNavigate(context, route, data, additionalFlags, options)
+    }
+
+    override fun identity(): BoatRoutes = this@composeWith.identity().combine(boatTestEffect.identity())
+}

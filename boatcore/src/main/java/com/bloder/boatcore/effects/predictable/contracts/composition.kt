@@ -9,5 +9,3 @@ fun BoatNavigationEffect.composeWith(contractEffect: BoatPredictableEffect<BoatR
     require(pred.isRight()) { pred.fold({ it }, { "" }) }
     return this
 }
-
-infix operator fun BoatNavigationEffect.plus(contractEffect: BoatPredictableEffect<BoatRoutes, String>): BoatNavigationEffect = composeWith(contractEffect)

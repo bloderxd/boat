@@ -14,7 +14,7 @@ import com.bloder.boat.ui.theme.BoatTheme
 import com.bloder.boatcore.Boat
 import com.bloder.boatcore.effects.navigation.BoatNavigationEffect
 import com.bloder.boatcore.effects.navigation.effect
-import com.bloder.boatcore.effects.navigation.plus
+import com.bloder.boatcore.effects.plus
 import com.bloder.boatcore.effects.predictable.contracts.effect
 import com.bloder.boatcore.effects.predictable.contracts.dsl.RouteContract
 
