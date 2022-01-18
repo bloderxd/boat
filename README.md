@@ -17,11 +17,11 @@ val moduleThird: BoatNavigationEffect = Boat {
 
 val appNavigation: BoatNavigationEffect = moduleFirst + moduleSecond + moduleThird
 
-fun main(context: Context) {
+suspend fun main(context: Context) {
   navigate(context, appNavigation)
 }
 
-fun navigate(context: Context, navigation: BoatNavigationEffect) {
+suspend fun navigate(context: Context, navigation: BoatNavigationEffect) {
   navigation.navigate(context, "/first") // Navigating to FirstActivity
   navigation.navigate(context, "/second") // Navigating to SecondActivity
   navigation.navigate(context, "/third") // Navigating to ThirdActivity
@@ -48,7 +48,7 @@ val appNavigation: BoatNavigationEffect = Boat {
   compose("/second") { SecondActivity::class }
 }.effect()
 
-fun main(context: Context) {
+suspend fun main(context: Context) {
   appNavigation.navigate(context, "/second") // Navigating to SecondActivity
 }
 ```
@@ -61,7 +61,7 @@ val appNavigation: BoatNavigationEffect = Boat {
   compose("/second") { SecondActivity::class }
 }.effect()
 
-fun main() {
+suspend fun main() {
   myExternalModule(appNavigation)
 }
 
@@ -72,11 +72,11 @@ private val myModuleNavigation: BoatNavigationEffect = Boat {
   compose("/my_module_2") { MyModuleSecondActivity::class }
 }.effect()
 
-fun myExternalModule(navigation: BoatNavigationEffect) {
+suspend fun myExternalModule(navigation: BoatNavigationEffect) {
   registerInMyDI(navigation + myModuleNavigation)
 }
 
-fun registerInMyDI(navigation: BoatNavigationEffect) {
+suspend fun registerInMyDI(navigation: BoatNavigationEffect) {
   // work with a composed navigation
 }
 ```
@@ -169,7 +169,7 @@ val Tracker.middleware: BoatMiddlewareEffect get() = boatMiddleware { route, _, 
   navigate()
 }
 
-fun main(context: Context, tracker: Tracker) {
+suspend fun main(context: Context, tracker: Tracker) {
   val appNavigation: BoatNavigationEffect = navigation + printMiddleware + tracker.middleware
 }
 ```
@@ -191,6 +191,5 @@ appNavigation.navigate(context, "/first")
 # Enhancement
 Next studies and improvements:
 
-- Usage of `suspend` functions in all effects to handle its Unit complexities
 - Integration with Compose `NavHost` API
 - Use `FIR` to validate `BoatRouteContractEffect` in compile time
