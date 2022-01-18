@@ -7,13 +7,13 @@ import com.bloder.boatcore.effects.navigation.BoatNavigationEffect
 
 interface BoatMiddlewareEffect : BoatNavigationEffect {
 
-    fun middle(route: String, data: Map<String, Parcelable>?, additionalFlags: Int?, options: Bundle?, navigate: () -> Unit)
+    suspend fun middle(route: String, data: Map<String, Parcelable>?, additionalFlags: Int?, options: Bundle?, navigate: suspend () -> Unit)
 
-    fun navigateIdentity(context: Context, route: String, data: Map<String, Parcelable>?, additionalFlags: Int?, options: Bundle?) {
+    suspend fun navigateIdentity(context: Context, route: String, data: Map<String, Parcelable>?, additionalFlags: Int?, options: Bundle?) {
         super.navigate(context, route, data, additionalFlags, options)
     }
 
-    override fun navigate(
+    override suspend fun navigate(
         context: Context,
         route: String,
         data: Map<String, Parcelable>?,

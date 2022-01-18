@@ -15,7 +15,7 @@ interface BoatTestEffect : BoatNavigationEffect {
         options: Bundle?
     )
 
-    override fun navigate(
+    override suspend fun navigate(
         context: Context,
         route: String,
         data: Map<String, Parcelable>?,

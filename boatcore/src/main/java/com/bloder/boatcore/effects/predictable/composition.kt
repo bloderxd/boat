@@ -6,5 +6,5 @@ import com.bloder.boatcore.routes.BoatRoutes
 
 fun <A, B> predictableEffect(pred: BoatNavigationEffect.(A) -> Either<B, BoatNavigationEffect>): BoatPredictableEffect<A, B> = object : BoatPredictableEffect<A, B> {
     override fun predicate(constraints: A): Either<B, BoatNavigationEffect> = pred(constraints)
-    override fun identity(): BoatRoutes = mapOf()
+    override suspend fun identity(): BoatRoutes = mapOf()
 }

@@ -4,18 +4,21 @@ import android.app.Activity
 import com.bloder.boatcore.effects.middleware.BoatMiddlewareEffect
 import com.bloder.boatcore.effects.middleware.boatMiddleware
 import com.bloder.boatcore.effects.plus
-import com.bloder.boatcore.effects.predictable.contracts.RouteContractEffect
+import com.bloder.boatcore.effects.predictable.contracts.BoatRouteContractEffect
 import com.bloder.boatcore.effects.predictable.contracts.dsl.RouteContract
 import com.bloder.boatcore.effects.predictable.contracts.effect
 import com.bloder.boatcore.effects.test.BoatTestEffect
 import com.bloder.boatcore.effects.test.testEffect
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class BoatMiddlewareTest {
 
     @Test
-    fun `validate middleware log message`() {
+    fun `validate middleware log message`() = runTest {
         var navigated = false
         var printed = false
         val test: BoatTestEffect = Boat { compose("A") { Activity::class } }.testEffect { _, _, _, _->
@@ -35,7 +38,7 @@ class BoatMiddlewareTest {
     }
 
     @Test
-    fun `assert middleware composition respect the correct sequence`() {
+    fun `assert middleware composition respect the correct sequence`() = runTest {
         val flow: MutableList<String> = mutableListOf()
         val test: BoatTestEffect = Boat { compose("A") { Activity::class } }.testEffect { _, _, _, _-> println("navigating") }
         val printMiddleware1: BoatMiddlewareEffect = boatMiddleware { route, _, _, _, navigate ->
@@ -61,7 +64,7 @@ class BoatMiddlewareTest {
     }
 
     @Test
-    fun `validate middleware composition with more than 2 middlewares and with other constraints`() {
+    fun `validate middleware composition with more than 2 middlewares and with other constraints`() = runTest {
         val flow: MutableList<String> = mutableListOf()
         val test: BoatTestEffect = Boat { compose("A") { Activity::class } }.testEffect { _, _, _, _-> println("navigating") }
         val test2: BoatTestEffect = Boat { compose("B") { Activity::class } }.testEffect { _, _, _, _-> println("navigating2") }
@@ -94,8 +97,8 @@ class BoatMiddlewareTest {
             println("Finished 4 to $route")
             flow.add("F4")
         }
-        val contract: RouteContractEffect = RouteContract { compose("B") }.effect { "route $this should be composed in boat" }
-        val boat = test + test2 + test3 + printMiddleware1 + printMiddleware2 + printMiddleware3 + printMiddleware4 + contract
+        val contractBoat: BoatRouteContractEffect = RouteContract { compose("B") }.effect { "route $this should be composed in boat" }
+        val boat = test + test2 + test3 + printMiddleware1 + printMiddleware2 + printMiddleware3 + printMiddleware4 + contractBoat
         boat.navigate(mockk(), "A")
         assert(flow[0] == "N1")
         assert(flow[1] == "N2")

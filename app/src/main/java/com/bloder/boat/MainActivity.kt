@@ -1,6 +1,9 @@
 package com.bloder.boat
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.bloder.boat.ui.theme.BoatTheme
 import com.bloder.boatcore.Boat
+import com.bloder.boatcore.effects.middleware.BoatMiddlewareEffect
+import com.bloder.boatcore.effects.middleware.boatMiddleware
 import com.bloder.boatcore.effects.navigation.BoatNavigationEffect
 import com.bloder.boatcore.effects.navigation.effect
 import com.bloder.boatcore.effects.plus
@@ -24,19 +29,30 @@ val navigation: BoatNavigationEffect = Boat {
 }.effect()
 
 val navigation2: BoatNavigationEffect = Boat {
-    compose("A") { ActivityA::class }
+    compose("C") { Activity::class }
 }.effect()
 
 val routeContract = RouteContract {
     compose("A")
-}.effect { "" }
+}.effect { "Route $this should be composed in navigation" }
 
-val appNavigation = navigation + routeContract + navigation2
+val logMiddlewareEffect: BoatMiddlewareEffect = boatMiddleware { route, _, _, _, navigate ->
+    Log.d("BoatLog", "Navigating to $route...")
+    navigate()
+    Log.d("BoatLog", "Navigated to $route!")
+}
+
+val trackMiddlewareEffect: BoatMiddlewareEffect = boatMiddleware { route, _, _, _, navigate ->
+    Log.d("Tracker", "Tracking $route...")
+    navigate()
+    Log.d("Tracker", "$route tracked!")
+}
+
+val appNavigation: BoatNavigationEffect = navigation + navigation2 + routeContract + logMiddlewareEffect + trackMiddlewareEffect
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appNavigation.navigate(this, "A")
         setContent {
             BoatTheme {
                 // A surface container using the 'background' color from the theme
@@ -48,6 +64,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        MainViewModel().navigateTo(this, appNavigation, "A")
     }
 }
 

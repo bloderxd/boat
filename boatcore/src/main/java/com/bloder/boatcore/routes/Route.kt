@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
 
 fun interface Route {
 
-    fun navigate(
+    suspend fun navigate(
         context: Context,
         data: Map<String, Parcelable>?,
         additionalFlags: Int?,

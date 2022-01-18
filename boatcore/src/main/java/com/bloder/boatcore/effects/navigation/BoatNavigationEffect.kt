@@ -16,7 +16,7 @@ interface BoatNavigationEffect : Monoid<BoatRoutes> {
         }.also { it.putAll(b) }
     }
 
-    fun navigate(
+    suspend fun navigate(
         context: Context,
         route: String,
         data: Map<String, Parcelable>? = null,

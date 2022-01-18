@@ -8,9 +8,9 @@ import com.bloder.boatcore.effects.predictable.predictableEffect
 import com.bloder.boatcore.routes.BoatRoutes
 
 typealias BoatRouteContract = List<String>
-typealias RouteContractEffect = BoatPredictableEffect<BoatRoutes, String>
+typealias BoatRouteContractEffect = BoatPredictableEffect<BoatRoutes, String>
 
-fun RouteContract.effect(failed: String.() -> String): RouteContractEffect = predictableEffect { routes ->
+fun RouteContract.effect(failed: String.() -> String): BoatRouteContractEffect = predictableEffect { routes ->
     val failedConstraints: MutableList<String> = mutableListOf()
     with(RouteContractContext.Config()) {
         config().fold(routes.keys) { ids, route ->
