@@ -188,6 +188,9 @@ appNavigation.navigate(context, "/first")
 > "Navigated to route /first" 
 ```
 
+# Side effects controlling
+We're working with effects in everywhere, performing a lot of uncontrolled side effects to our program. Thinking on that all `Boat` effects has its `Unit` returned functions marked with a `suspend` operator. Once we're declaring our impure functions with `suspend` operator, Kotlin compiler "declares" in compile time for us a `Continuation<A>` extra parameter that proves that we know how to handle success and failure results from our effect. With that we can control our program in a way that `Boat` is not allowed to perform effects out of a pure environment (inside another `suspend` function or a continuation).
+
 # Enhancement
 Next studies and improvements:
 
